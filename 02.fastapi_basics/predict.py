@@ -16,9 +16,16 @@ def predict(image: Image):
     print(image)
 
     results = tf.keras.applications.imagenet_utils.decode_predictions(
-        model.predict(image), 2
-    )
+        model.predict(image), 3
+    )[0]
 
     print(results)
 
-    return results
+    result_list = []
+    for i in results:
+        result_list.append({
+            "class": i[1],
+            "confidence": f'{i[2]*100:0.2f}%'
+        })
+    
+    return result_list

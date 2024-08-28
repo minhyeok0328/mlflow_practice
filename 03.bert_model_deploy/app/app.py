@@ -6,13 +6,14 @@ import torch
 import os
 from scripts.s3 import download_dir
 from transformers import pipeline
+import uvicorn
 
 app = FastAPI()
 
 device = torch.device('cuda') if torch.cuda.is_available() else torch.device("cpu")
 
 model_name = 'tinybert-sentiment-analysis/'
-local_path = model_name
+local_path = 'ml-models/'+model_name
 
 if not os.path.isdir(local_path):
     download_dir(local_path, model_name)
@@ -24,8 +25,8 @@ sentiment_model = pipeline('text-classification', model=local_path, device=devic
 def root():
     return {"Hello":"FastAPI"}
 
-import time
-@app.post('/api/v1/sentiment')
+import time 
+@app.post('/api/v1/sentiment') # 127.0.0.1:8000/api/v1/sentiment - POST
 def sentiment_analysis(data: NLPDataInput): # payload: 프론트엔드에서 어떤 데이터를 보낼지를 결정
     start_time = time.time()
 
@@ -52,8 +53,8 @@ def sentiment_analysis(data: NLPDataInput): # payload: 프론트엔드에서 어
     return result
 
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app="app:app", port=8000, reload=True)
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run(app="app:app", port=8000, reload=True)
 
-# Docker => NginX(WebServer) => EC2 (endpoint - 실제 백엔드 서버를 구축)
+# 경성님: 역시. 실력 향상을 위해 일부러 트러블 만드신 거 다 알고 있습니다.

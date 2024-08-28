@@ -1,0 +1,11 @@
+FROM nginx:latest
+
+# Install curl
+RUN apt-get update && apt-get install -y curl
+
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
+
+# -포폴 추천-
+# 여러분들 포폴 만드시면 => 벤치마크 지수 뽑아보세요.
+# ELK stack => Log데이터 NoSQL 저장 => 시각화
